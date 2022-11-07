@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lovely Ducky</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 0 10px white);
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .heart {
+            height: 150px;
+            width: 150px;
+            background: #FF1493;
+            position: relative;
+            transform: rotate(-45deg);
+            box-shadow: -10px 10px 90px #FF1493;
+            animation: heartbeat 0.7s linear infinite;
+            z-index: -1;
+        }
+
+        .heart:before {
+            content: '';
+            position: absolute;
+            height: 150px;
+            width: 150px;
+            background: #FF1493;
+            top: -50%;
+            border-radius: 100px;
+            box-shadow: -10px -10px 90px #FF1493;
+            z-index: -1;
+        }
+
+        .heart:after {
+            content: '';
+            position: absolute;
+            height: 150px;
+            width: 150px;
+            background: #FF1493;
+            right: -50%;
+            border-radius: 100px;
+            box-shadow: 10px 10px 90px #FF1493;
+            z-index: -1;
+        }
+
+        .ducky {
+            /* Rounded border */
+            border-radius: 50%;
+            position: absolute;
+            padding-bottom: 30px;
+            /* Center the content */
+            align-items: center;
+            display: inline-block;
+            justify-content: center;
+            /* Size */
+            height: 10rem;
+            width: 8rem;
+        }
+
+        .ducky__image {
+            /* Size */
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            animation: heartbeat2 0.7s linear infinite;
+        }
+
+        .snowflake {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(white, white);
+            border-radius: 50%;
+            filter: drop-shadow(0 0 10px white);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: rotate(-45deg) scale(1.1);
+            }
+
+            80% {
+                transform: rotate(-45deg) scale(0.9);
+            }
+
+            100% {
+                transform: rotate(-45deg) scale(0.8);
+            }
+        }
+
+        @keyframes heartbeat2 {
+            0% {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            80% {
+                transform: rotate(0deg) scale(0.9);
+            }
+
+            100% {
+                transform: rotate(0deg) scale(0.8);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="snow"></div>
+
+    <div class="container">
+        <div class="heart"></div>
+        <div class="ducky">
+            <img class="ducky__image"
+                src="https://scontent.fhan14-3.fna.fbcdn.net/v/t39.30808-6/294169906_3343311855951986_4032040862824722405_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=bE_9WcqABe0AX8Odwrc&_nc_ht=scontent.fhan14-3.fna&oh=00_AfDZg2c5RdzbgcLV6KeNC1xNEUTa-DrdJLH6JX5JHcpBRA&oe=636DCF3B" />
+        </div>
+    </div>
+
+    <script>
+        let snowflakes_count = 200;
+        if (typeof total !== 'undefined') {
+            snowflakes_count = total;
+        }
+        function spawn_snow(snow_density = 200) {
+            snow_density -= 1;
+
+            for (let x = 0; x < snow_density; x++) {
+                let board = document.createElement('div');
+                board.className = "snowflake";
+
+                document.getElementById('snow').appendChild(board);
+            }
+        }
+        function add_css(rule) {
+            let css = document.createElement('style');
+            css.type = 'text/css';
+            css.appendChild(document.createTextNode(rule)); // Support for the rest
+            document.getElementsByTagName("head")[0].appendChild(css);
+        }
+        function random_int(value = 100) {
+            return Math.floor(Math.random() * value) + 1;
+        }
+        function random_range(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        function spawnSnowCSS(snow_density = 200) {
+            let snowflake_name = "snowflake";
+            let rule = ``;
+            if (typeof base_css !== 'undefined') {
+                rule = base_css;
+            }
+            for (let i = 1; i < snow_density; i++) {
+                let random_x = Math.random() * 100; // vw
+                let random_offset = random_range(-100000, 100000) * 0.0001; // vw;
+                let random_x_end = random_x + random_offset;
+                let random_x_end_yoyo = random_x + (random_offset / 2);
+                let random_yoyo_time = random_range(30000, 80000) / 100000;
+                let random_yoyo_y = random_yoyo_time * 100; // vh
+                let random_scale = Math.random();
+                let fall_duration = random_range(10, 30) * 1; // s
+                let fall_delay = random_int(30) * -1; // s
+                let opacity_ = Math.random();
+                rule += `
+        .${snowflake_name}:nth-child(${i}) {
+            opacity: ${opacity_};
+            transform: translate(${random_x}vw, -10px) scale(${random_scale});
+            animation: fall-${i} ${fall_duration}s ${fall_delay}s linear infinite;
+        }
+        @keyframes fall-${i} {
+            ${random_yoyo_time * 100}% {
+                transform: translate(${random_x_end}vw, ${random_yoyo_y}vh) scale(${random_scale});
+            }
+            to {
+                transform: translate(${random_x_end_yoyo}vw, 100vh) scale(${random_scale});
+            }
+        }
+        `
+            }
+            add_css(rule);
+        }
+        window.onload = function () {
+            spawnSnowCSS(snowflakes_count);
+            spawn_snow(snowflakes_count);
+        };
+    </script>
+</body>
+
+</html>
